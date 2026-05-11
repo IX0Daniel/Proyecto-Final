@@ -15,8 +15,8 @@ public class PropuestaService {
         return dao.insertar(p);
     }
 
-    public List<Propuesta> porProyecto(int idProyecto) throws Exception {
-        return dao.obtenerPorProyecto(idProyecto);
+    public List<PropuestaDTO> porProyecto(int idProyecto, int idUsuario) throws Exception {
+        return dao.listarPorProyecto(idProyecto, idUsuario);
     }
 
     public List<Propuesta> misPropuestas(int idFreelancer) throws Exception {

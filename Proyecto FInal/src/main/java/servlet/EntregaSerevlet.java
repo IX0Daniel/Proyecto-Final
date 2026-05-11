@@ -8,10 +8,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import service.EntregaService;
+import utils.JwtUtil;
 
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet("/api/entregas/*")
 public class EntregaSerevlet extends HttpServlet {
@@ -25,6 +28,12 @@ public class EntregaSerevlet extends HttpServlet {
             throws IOException {
 
         String path = req.getPathInfo();
+
+
+        String token = req.getHeader("Authorization").replace("Bearer ", "");
+        int idCliente = JwtUtil.obtenerId(token);
+
+        String rolCLiente = JwtUtil.obtenerRol(token);
 
         try {
 
@@ -46,7 +55,7 @@ public class EntregaSerevlet extends HttpServlet {
                 BufferedReader br = req.getReader();
                 AprobarEntregaRequest dto = gson.fromJson(br, AprobarEntregaRequest.class);
 
-                service.aprobar(dto.getIdEntrega());
+                service.aprobar(dto.getIdEntrega(), idCliente, rolCLiente );
 
                 resp.getWriter().print("OK");
             }

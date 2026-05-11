@@ -1,7 +1,9 @@
 package servlet;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.gson.Gson;
 import dto.propuesta.CrearPropuestRequest;
+import dto.propuesta.PropuestaDTO;
 import dto.propuesta.PropuestaService;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -12,6 +14,7 @@ import utils.JwtUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.List;
 
 
 @WebServlet("/api/propuestas/*")
@@ -29,7 +32,11 @@ public class PropuestaServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
+
+        System.out.println("Se va a intentar crear una propuesta :V:V:V");
         String path = req.getPathInfo();
+
+
 
         try {
 
@@ -53,10 +60,13 @@ public class PropuestaServlet extends HttpServlet {
             }
 
         } catch (IllegalArgumentException e) {
+            System.out.println("No se pudo");
             resp.sendError(400, e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             resp.getWriter().print(e.getMessage());
+            System.out.println("No se pudo");
+
         }
 
 /*        catch (Exception e) {
@@ -65,4 +75,74 @@ public class PropuestaServlet extends HttpServlet {
 
         }*/
     }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+
+
+
+
+
+
+
+        try {
+
+            String idProyectoParam = req.getParameter("idProyecto");
+
+            if (idProyectoParam == null) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "idProyecto requerido");
+                return;
+            }
+
+            int idProyecto = Integer.parseInt(idProyectoParam);
+
+            int idUsuario = (int) req.getAttribute("idUsuario");
+
+            List<PropuestaDTO> propuestas = service.porProyecto(idProyecto, idUsuario);
+
+            String json = gson.toJson(propuestas);
+            resp.getWriter().write(json);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
+
+/*
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+
+        try {
+            int idProyecto = Integer.parseInt(req.getParameter("idProyecto"));
+            int idUsuario = (int) req.getAttribute("idUsuario");
+
+            System.out.println(idProyecto);
+            System.out.println(idUsuario);
+
+            List<PropuestaDTO> propuestas = service.porProyecto(idProyecto, idUsuario);
+
+            resp.getWriter().print(gson.toJson(propuestas));
+
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            resp.getWriter().print(e.getMessage());
+        }
+
+/*        catch (Exception e) {
+            resp.sendError(500);
+
+
+        }
+*/
 }

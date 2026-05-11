@@ -52,6 +52,8 @@ public class ProyectoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
+
+        System.out.println("Se va a crear un proyecto");
         try {
 
             int idCliente = getId(req);
@@ -74,6 +76,7 @@ public class ProyectoServlet extends HttpServlet {
         }catch (Exception e) {
             e.printStackTrace();
             resp.getWriter().print(e.getMessage());
+            System.out.println("No se creó");
         }
 
 /*        catch (Exception e) {

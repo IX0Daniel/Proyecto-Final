@@ -2,29 +2,29 @@ package models;
 
 public class Proyecto {
 
-    private int id;
-    private int idCliente;
+    private int id_proyecto;
+    private int id_cliente;
     private String titulo;
     private String descripcion;
-    private int idCategoria;
+    private int id_categoria;
     private double presupuesto;
-    private String fechaLimite;
+    private String fecha_limite;
     private String estado;
 
-    public int getId() {
-        return id;
+    public int getId_proyecto() {
+        return id_proyecto;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId_proyecto(int id) {
+        this.id_proyecto = id;
     }
 
-    public int getIdCliente() {
-        return idCliente;
+    public int getId_cliente() {
+        return id_cliente;
     }
 
     public void setIdCliente(int idCliente) {
-        this.idCliente = idCliente;
+        this.id_cliente = idCliente;
     }
 
     public String getTitulo() {
@@ -44,11 +44,11 @@ public class Proyecto {
     }
 
     public int getIdCategoria() {
-        return idCategoria;
+        return id_categoria;
     }
 
     public void setIdCategoria(int idCategoria) {
-        this.idCategoria = idCategoria;
+        this.id_categoria = idCategoria;
     }
 
     public double getPresupuesto() {
@@ -60,11 +60,11 @@ public class Proyecto {
     }
 
     public String getFechaLimite() {
-        return fechaLimite;
+        return fecha_limite;
     }
 
     public void setFechaLimite(String fechaLimite) {
-        this.fechaLimite = fechaLimite;
+        this.fecha_limite = fechaLimite;
     }
 
     public String getEstado() {

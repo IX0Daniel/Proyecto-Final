@@ -1,5 +1,6 @@
 package dao;
 
+import dto.propuesta.PropuestaDTO;
 import models.Propuesta;
 import utils.ConexionDB;
 
@@ -46,6 +47,46 @@ public class PropuestaDAO {
             return ps.executeUpdate() > 0;
         }
     }
+
+
+    public List<PropuestaDTO> listarPorProyecto(int idProyecto, int idUsuario) {
+
+        List<PropuestaDTO> lista = new ArrayList<>();
+
+        String sql = "SELECT p.id_propuesta, p.monto_ofertado, p.plazo_dias, p.carta_presentacion, p.estado, u.username AS nombre_freelancer FROM propuesta p JOIN usuario u ON p.id_freelancer = u.id_usuario JOIN proyecto pr ON p.id_proyecto = pr.id_proyecto WHERE p.id_proyecto = ? AND pr.id_cliente = ?";
+
+        try (Connection conn = ConexionDB.getConexion();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, idProyecto);
+            ps.setInt(2, idUsuario);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                PropuestaDTO dto = new PropuestaDTO();
+
+                dto.setIdPropuesta(rs.getInt("id_propuesta"));
+                dto.setMontoOfertado(rs.getBigDecimal("monto_ofertado").doubleValue());
+                dto.setPlazoDias(rs.getInt("plazo_dias"));
+                dto.setCartaPresentacion(rs.getString("carta_presentacion"));
+                dto.setEstado(rs.getString("estado"));
+                dto.setNombreFreelancer(rs.getString("nombre_freelancer"));
+
+                lista.add(dto);
+
+                System.out.println(dto);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
+
 
     public List<Propuesta> obtenerPorProyecto(int idProyecto) throws Exception {
 

@@ -24,7 +24,7 @@ public class ProyectoDAO {
             ps.setInt(3, p.getIdCategoria());
             ps.setDouble(4, p.getPresupuesto());
             ps.setString(5, p.getFechaLimite());
-            ps.setInt(6, p.getIdCliente());
+            ps.setInt(6, p.getId_cliente());
 
             ps.executeUpdate();
 
@@ -69,10 +69,12 @@ public class ProyectoDAO {
             while (rs.next()) {
                 Proyecto p = new Proyecto();
 
-                p.setId(rs.getInt("id_proyecto"));
+                p.setId_proyecto(rs.getInt("id_proyecto"));
                 p.setTitulo(rs.getString("titulo"));
+                p.setIdCliente(rs.getInt("id_cliente"));
                 p.setDescripcion(rs.getString("descripcion"));
                 p.setPresupuesto(rs.getDouble("presupuesto"));
+                p.setIdCategoria(rs.getInt("id_categoria"));
                 p.setEstado(rs.getString("estado"));
 
                 lista.add(p);
@@ -94,7 +96,7 @@ public class ProyectoDAO {
             ps.setString(2, p.getDescripcion());
             ps.setDouble(3, p.getPresupuesto());
             ps.setString(4, p.getFechaLimite());
-            ps.setInt(5, p.getId());
+            ps.setInt(5, p.getId_proyecto());
 
             return ps.executeUpdate() > 0;
         }
