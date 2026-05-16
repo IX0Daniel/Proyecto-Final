@@ -51,6 +51,7 @@ public class PropuestaServlet extends HttpServlet {
                 p.setIdProyecto(dto.getIdProyecto());
                 p.setMonto(dto.getMonto());
                 p.setPlazoDias(dto.getPlazoDias());
+                p.setCartaPresentacion(dto.getCartaPresentacion());
                 p.setIdFreelancer(idFreelancer);
 
                 boolean ok = service.enviar(p);

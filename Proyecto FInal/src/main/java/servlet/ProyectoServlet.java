@@ -59,7 +59,12 @@ public class ProyectoServlet extends HttpServlet {
             int idCliente = getId(req);
 
             BufferedReader br = req.getReader();
+            System.out.println("GSON");
+
+
             CrearProyectoRequest dto = gson.fromJson(br, CrearProyectoRequest.class);
+            System.out.println(dto.getIdCategoria());
+            System.out.println(Integer.toString(dto.getIdCategoria()));
 
             Proyecto p = new Proyecto();
             p.setTitulo(dto.getTitulo());
@@ -69,6 +74,10 @@ public class ProyectoServlet extends HttpServlet {
             p.setFechaLimite(dto.getFechaLimite());
             p.setIdCliente(idCliente);
 
+
+            System.out.println("Habliidades");
+
+            System.out.println(gson.toJson(dto));
             int id = service.crear(p, dto.getHabilidades());
 
             resp.getWriter().print("{\"id\":" + id + "}");
@@ -77,12 +86,8 @@ public class ProyectoServlet extends HttpServlet {
             e.printStackTrace();
             resp.getWriter().print(e.getMessage());
             System.out.println("No se creó");
-        }
-
-/*        catch (Exception e) {
             resp.sendError(500);
 
-
-        }*/
+        }
     }
 }

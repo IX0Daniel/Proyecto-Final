@@ -1,7 +1,7 @@
 package service;
 
 import dao.AuthDAO;
-import dto.RegisterDTO;
+import dto.registro.RegisterDTO;
 import models.Usuario;
 import org.mindrot.jbcrypt.BCrypt;
 

@@ -11,9 +11,22 @@ public class ProyectoService {
 
     public int crear(Proyecto p, List<Integer> habilidades) throws Exception {
 
+
+        System.out.println("Agregando HAbillidades");
         int id = dao.crear(p);
 
         if (id > 0 && habilidades != null) {
+
+            System.out.println("2Se van a agregar las habilidades");
+
+            for (Integer valor: habilidades) {
+
+                System.out.println(valor);
+
+
+            }
+
+
             dao.insertarHabilidades(id, habilidades);
         }
 

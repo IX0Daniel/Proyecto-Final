@@ -1,6 +1,9 @@
 package servlet;
 
 import com.google.gson.Gson;
+import dto.registro.RegisterDTO;
+
+import dto.usuario.UsuarioResponse;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,7 +29,6 @@ public class UsuarioSerlvet extends HttpServlet {
         String token = auth.replace("Bearer ", "");
 
         int id = JwtUtil.obtenerId(token);
-        String rol = JwtUtil.obtenerRol(token);
 
         return id;
     }
@@ -44,13 +46,18 @@ public class UsuarioSerlvet extends HttpServlet {
 
             if ("/perfil".equals(path)) {
 
-                Usuario u = service.obtenerPerfil(id);
-                resp.getWriter().print(gson.toJson(u));
+                Usuario usuario = service.obtenerPerfil(id);
+                resp.getWriter().print(gson.toJson(usuario));
 
             } else if ("/saldo".equals(path)) {
 
-                Usuario u = service.obtenerPerfil(id);
-                resp.getWriter().print(gson.toJson(u));
+                Usuario usuario = service.obtenerPerfil(id);
+                resp.getWriter().print(gson.toJson(usuario));
+
+            } else if ("/informacion".equals(path)) {
+
+                UsuarioResponse usuario = service.obtenerUsuario(id);
+                resp.getWriter().print(gson.toJson(usuario));
 
             }
 
@@ -92,6 +99,33 @@ public class UsuarioSerlvet extends HttpServlet {
             resp.sendError(500);
         }
     }
+
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+
+        try {
+
+            String path = req.getPathInfo();
+
+            if (path == null || "/register".equals(path)) {
+
+                BufferedReader br = req.getReader();
+                RegisterDTO dto = gson.fromJson(br, RegisterDTO.class);
+
+                service.registrar(dto);
+
+                resp.getWriter().print("OK");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendError(500, e.getMessage());
+        }
+    }
+
+
 
     class PasswordDTO {
         String nuevaPassword;

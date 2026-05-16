@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="ConnectWork:war2">
+    <output-path>$PROJECT_DIR$/out/artifacts/ConnectWork_war2</output-path>
+    <root id="archive" name="ConnectWork_war.war">
+      <element id="artifact" artifact-name="ConnectWork:war exploded" />
+    </root>
+  </artifact>
+</component>

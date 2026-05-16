@@ -1,5 +1,6 @@
 package dao;
 
+import dto.entrega.EntregaResponse;
 import models.EntregaData;
 import models.PagoData;
 import utils.ConexionDB;
@@ -7,6 +8,8 @@ import utils.ConexionDB;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EntregaDAO {
 
@@ -92,45 +95,6 @@ public class EntregaDAO {
             ps.setInt(2, data.getIdCliente());
             ps.executeUpdate();
         }
-
-        /*
-        String sqlFreelancer = "SELECT p.id_freelancer FROM contrato c JOIN propuesta p ON c.id_propuesta = p.id_propuesta WHERE c.id_contrato = ?";
-
-        int idFreelancer = 0;
-
-        try (PreparedStatement ps = con.prepareStatement(sqlFreelancer)) {
-            ps.setInt(1, idContrato);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                idFreelancer = rs.getInt(1);
-            }
-        }
-
-        // pagar freelancer
-        String pago = "UPDATE usuario SET saldo = saldo + ? WHERE id_usuario = ?";
-
-        try (PreparedStatement ps = con.prepareStatement(pago)) {
-            ps.setDouble(1, pagoFreelancer);
-            ps.setInt(2, idFreelancer);
-            ps.executeUpdate();
-        }
-
-        // liberar saldo bloqueado del cliente
-        String liberar ="UPDATE usuario \n" +
-                "SET saldo_bloqueado = saldo_bloqueado - ? \n" +
-                "WHERE id_usuario = (\n" +
-                "    SELECT pr.id_cliente \n" +
-                "    FROM contrato c\n" +
-                "    JOIN propuesta p ON c.id_propuesta = p.id_propuesta\n" +
-                "    JOIN proyecto pr ON p.id_proyecto = pr.id_proyecto\n" +
-                "    WHERE c.id_contrato = ?\n" +
-                ")";
-
-        try (PreparedStatement ps = con.prepareStatement(liberar)) {
-            ps.setDouble(1, monto);
-            ps.setInt(2, idContrato);
-            ps.executeUpdate();
-        }*/
     }
 
 
@@ -169,6 +133,51 @@ public class EntregaDAO {
 
         throw new IllegalArgumentException("Contrato inválido");
     }
+    public List<EntregaResponse> listarPorContrato(int idContrato, Connection con) throws Exception {
+
+        List<EntregaResponse> lista = new ArrayList<>();
+
+        String sql = "SELECT id_entrega, fecha_entrega, descripcion, url_archivo, estado, motivo_rechazo FROM entrega WHERE id_contrato = ? ORDER BY id_entrega DESC ";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idContrato);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                lista.add(new EntregaResponse(
+                        rs.getInt("id_entrega"),
+                        rs.getString("fecha_entrega"),
+                        rs.getString("descripcion"),
+                        rs.getString("url_archivo"),
+                        rs.getString("estado"),
+                        rs.getString("motivo_rechazo")
+                ));
+            }
+        }
+
+        return lista;
+    }
 
 
+    public void rechazarEntrega(int idEntrega, String motivo, Connection con) throws Exception {
+
+        String sql = "UPDATE entrega SET estado='RECHAZADA', motivo_rechazo=? WHERE id_entrega=?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, motivo);
+            ps.setInt(2, idEntrega);
+            ps.executeUpdate();
+        }
+    }
+
+    public void volverAEnProgreso(int idContrato, Connection con) throws Exception {
+
+        String sql = "UPDATE proyecto p JOIN propuesta pr ON p.id_proyecto = pr.id_proyecto JOIN contrato c ON pr.id_propuesta = c.id_propuesta SET p.estado = 'EN_PROGRESO'WHERE c.id_contrato = ?";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, idContrato);
+            ps.executeUpdate();
+        }
+    }
 }

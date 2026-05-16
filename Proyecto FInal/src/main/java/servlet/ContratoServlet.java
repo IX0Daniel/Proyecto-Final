@@ -1,6 +1,7 @@
 package servlet;
 
 import com.google.gson.Gson;
+import dto.contrato.ContratoListResponse;
 import dto.contrato.ContratoResponse;
 import dto.contrato.CrearContratoRequest;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,6 +13,7 @@ import utils.JwtUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.List;
 
 
 @WebServlet("/api/contratos/*")
@@ -52,6 +54,44 @@ public class ContratoServlet extends HttpServlet {
 
 
         }*/
+    }
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+
+        resp.setContentType("application/json");
+
+        String path = req.getPathInfo();
+
+        try {
+
+            String token = req.getHeader("Authorization")
+                    .replace("Bearer ", "");
+
+            int idUsuario = JwtUtil.obtenerId(token);
+
+            if ("/freelancer".equals(path)) {
+
+                List<ContratoListResponse> lista =
+                        service.listarContratosFreelancer(idUsuario);
+
+                resp.getWriter().print(gson.toJson(lista));
+
+            }else if ("/cliente".equals(path)) {
+
+                List<ContratoListResponse> lista =
+                        service.listarContratosCliente(idUsuario);
+
+                resp.getWriter().print(gson.toJson(lista));
+            }
+
+
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            resp.sendError(500, e.getMessage());
+        }
     }
 
 }

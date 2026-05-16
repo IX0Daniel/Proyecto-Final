@@ -30,6 +30,12 @@ public class JwtFilter implements Filter {
             return;
         }
 
+        if( path.contains("/administrador")){
+            chain.doFilter(request, response);
+            return;
+
+        }
+
         String auth = req.getHeader("Authorization");
 
         System.out.println("HEADER AUTH: " + auth);

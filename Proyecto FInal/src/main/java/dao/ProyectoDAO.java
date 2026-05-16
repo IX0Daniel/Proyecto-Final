@@ -12,24 +12,27 @@ import java.util.List;
 
 public class ProyectoDAO {
 
-    public int crear(Proyecto p) throws Exception {
+    public int crear(Proyecto proyecto) throws Exception {
 
         String sql = "INSERT INTO proyecto (titulo, descripcion, id_categoria, presupuesto, fecha_limite, estado, id_cliente) VALUES (?, ?, ?, ?, ?, 'ABIERTO', ?)";
 
         try (Connection con = ConexionDB.getConexion();
              PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            ps.setString(1, p.getTitulo());
-            ps.setString(2, p.getDescripcion());
-            ps.setInt(3, p.getIdCategoria());
-            ps.setDouble(4, p.getPresupuesto());
-            ps.setString(5, p.getFechaLimite());
-            ps.setInt(6, p.getId_cliente());
+            ps.setString(1, proyecto.getTitulo());
+            ps.setString(2, proyecto.getDescripcion());
+            ps.setInt(3, proyecto.getIdCategoria());
+            ps.setDouble(4, proyecto.getPresupuesto());
+            ps.setString(5, proyecto.getFechaLimite());
+            ps.setInt(6, proyecto.getId_cliente());
 
             ps.executeUpdate();
 
             ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) return rs.getInt(1);
+            if (rs.next()) {
+
+                return rs.getInt(1);
+            }
         }
 
         return -1;

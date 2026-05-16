@@ -14,9 +14,7 @@ CREATE TABLE usuario (
     fecha_nacimiento DATE,
     rol ENUM('cliente', 'freelancer', 'administrador') NOT NULL DEFAULT 'cliente',
 
-
     activo BOOLEAN DEFAULT TRUE,
-
     saldo DECIMAL(12,2) DEFAULT 0.00,
     saldo_bloqueado DECIMAL(12,2) DEFAULT 0.00,
 
@@ -49,7 +47,7 @@ CREATE TABLE usuario_freelancer (
 CREATE TABLE categoria(
     id_categoria INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(50),
-    descripcion VARCHAR(100),
+    descripcion TEXT,
     activo BOOLEAN DEFAULT TRUE
 );
 
@@ -184,6 +182,8 @@ CREATE TABLE entrega(
     descripcion VARCHAR(100),
     url_archivo VARCHAR(300),
 
+
+    motivo_rechazo TEXT;
     estado ENUM(
         'PENDIENTE',
         'APROBADA',

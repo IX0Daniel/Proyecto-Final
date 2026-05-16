@@ -1,11 +1,15 @@
 package dao;
 
+import dto.contrato.ContratoListResponse;
+import dto.contrato.ContratoResponse;
 import models.PropuestaData;
 import utils.ConexionDB;
 
 import java.sql.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContratoDAO {
 
@@ -114,4 +118,65 @@ public class ContratoDAO {
 
         throw new IllegalArgumentException("Propuesta no existe");
     }
+
+
+    public List<ContratoListResponse> listarContratosFreelancer(int idFreelancer)
+            throws Exception {
+
+        List<ContratoListResponse> lista = new ArrayList<>();
+
+        String sql = "SELECT c.id_contrato, p.titulo, u.nombre_completo, c.monto, c.estado FROM contrato c INNER JOIN propuesta pr ON c.id_propuesta = pr.id_propuesta INNER JOIN proyecto p ON pr.id_proyecto = p.id_proyecto INNER JOIN usuario u ON p.id_cliente = u.id_usuario WHERE pr.id_freelancer = ?";
+
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idFreelancer);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                lista.add(new ContratoListResponse(
+                        rs.getInt("id_contrato"),
+                        rs.getString("titulo"),
+                        rs.getString("nombre_completo"),
+                        rs.getDouble("monto"),
+                        rs.getString("estado")
+                ));
+            }
+        }
+
+        return lista;
+    }
+
+
+    public List<ContratoListResponse> listarContratosCliente(int idCliente)
+            throws Exception {
+
+        List<ContratoListResponse> lista = new ArrayList<>();
+
+        String sql = "SELECT c.id_contrato, p.titulo, u.nombre_completo AS nombreFreelancer, c.monto, c.estado FROM contrato c INNER JOIN propuesta pr ON c.id_propuesta = pr.id_propuesta INNER JOIN proyecto p ON pr.id_proyecto = p.id_proyecto INNER JOIN usuario u ON pr.id_freelancer = u.id_usuario WHERE p.id_cliente = ?";
+
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setInt(1, idCliente);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+
+                lista.add(new ContratoListResponse(
+                        rs.getInt("id_contrato"),
+                        rs.getString("titulo"),
+                        rs.getString("nombreFreelancer"),
+                        rs.getDouble("monto"),
+                        rs.getString("estado")
+                ));
+            }
+        }
+
+        return lista;
+    }
+
 }

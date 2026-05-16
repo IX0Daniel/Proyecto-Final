@@ -1,9 +1,13 @@
 package service;
 
 import dao.ContratoDAO;
+import dto.contrato.ContratoListResponse;
+import dto.contrato.ContratoResponse;
 import models.PropuestaData;
+import utils.ConexionDB;
 
 import java.sql.Connection;
+import java.util.List;
 
 public class ContratoService {
 
@@ -67,6 +71,19 @@ public class ContratoService {
         } finally {
             con.close();
         }
+    }
+
+
+    public List<ContratoListResponse> listarContratosFreelancer(int idFreelancer)
+            throws Exception {
+
+        return dao.listarContratosFreelancer(idFreelancer);
+    }
+
+    public List<ContratoListResponse> listarContratosCliente(int idCliente)
+            throws Exception {
+
+        return dao.listarContratosCliente(idCliente);
     }
 
 }

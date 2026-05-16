@@ -6,6 +6,8 @@ import utils.ConexionDB;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class UsuarioDAO {
 
@@ -70,4 +72,34 @@ public class UsuarioDAO {
             return ps.executeUpdate() > 0;
         }
     }
+
+
+    public boolean registrarUsuario(Usuario u) throws Exception {
+
+        String sql = "INSERT INTO usuario " +
+                "(nombre_completo, username, password, correo, telefono, direccion, cui, fecha_nacimiento, rol) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection con = ConexionDB.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
+
+            SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
+            Date fecha = formato.parse(u.getFechaNacimiento());
+            java.sql.Date sqlDate = new java.sql.Date(fecha.getTime());
+
+            ps.setString(1, u.getNombreCompleto());
+            ps.setString(2, u.getUsername());
+            ps.setString(3, u.getPassword());
+            ps.setString(4, u.getCorreo());
+            ps.setString(5, u.getTelefono());
+            ps.setString(6, u.getDireccion());
+            ps.setString(7, u.getCui());
+            ps.setDate(8, sqlDate);
+            ps.setString(9, u.getRol());
+
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+
 }

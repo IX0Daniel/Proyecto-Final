@@ -1,7 +1,7 @@
 package servlet;
 
 import com.google.gson.Gson;
-import dto.RegisterDTO;
+import dto.registro.RegisterDTO;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,10 +11,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
 
 import models.Usuario;
 import service.AuthService;
@@ -133,6 +129,8 @@ public class AuthServlet extends HttpServlet {
     private void register(HttpServletRequest req, HttpServletResponse resp)
             throws Exception {
 
+
+        System.out.println(" se  va a registrar a un usuario");
         BufferedReader br = req.getReader();
         RegisterDTO dto = gson.fromJson(br, RegisterDTO.class);
 
